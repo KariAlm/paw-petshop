@@ -13,7 +13,7 @@
     <title>Paw | Alta de Productos</title>
 </head>
 <body>
-    <header>
+    <header> 
         <!-- Topbar Start -->
         <div class="topbar">
             <nav class="contact-info">
@@ -93,20 +93,6 @@
             </div>
         </nav>
         <!-- Navbar End -->
-        <style>
-            .producto {
-                border: 1px solid #ccc;
-                margin: 10px;
-                padding: 10px;
-                display: inline-block;
-            }
-    
-            img {
-                max-width: 100%;
-                height: auto;
-            }
-        </style>
-<body>
     <h1 id="tituloProd">Agregar Productos al Inventario</h1>
     
     
@@ -140,44 +126,6 @@
             </ul>
         </div>
     </form>
-    <footer class="footer">
-        <div class="logo">
-            <!-- <picture class=""> -->
-                <img alt="full logo" src="../img/isologo.png">
-            <!-- </picture> -->
-        </div>
-        <div class="left">
-            <ul class="list-pages">
-                <li class="item"><a href="#" class="link">Empresa</a></li>
-                <li class="item"><a href="./contact.html" class="link">Contacto</a></li>
-                <li class=item"><a href="#" class="link">Blog</a></li>
-                <li class="item"><a href="./terminosyCondiciones.html" class="link">Términos y Condiciones</a></li>
-                <li class="item"><a href="./botonDeArrepentimiento.html" class="link">Botón de arrepentimiento</a></li>
-            </ul>
-        </div>
-        <div class="right">
-            <h5 class="title">Suscríbete a nuestro Newsletter</h5>
-            <form action="" class="data">
-                <input type="email" placeholder="nombre@mail.com" class="email">
-                <input type="submit" value="Enviar" class="submit">
-            </form>
-            <h5 class="rrss">Nuestras Redes Sociales</h5>
-            <ul class="list-rrss">
-                <li><i class="fa-brands fa-facebook-f"></i></li>
-                <li><i class="fa-brands fa-x-twitter"></i></li>
-                <li><i class="fa-brands fa-instagram"></i></li>
-            </ul>
-        </div>
-        <div class="foot">
-            <p class="copy-bigfoot">Todos los derechos reservados ©2023 | Hecho con <span class="heart">♥️ </span>by  <a href="#">Paw PetShop</a>.</p>
-        </div>
-    
-        <div class="dog-snout">
-            <img src="../img/dog-snout.png">
-        </div>
-    </footer>
-    
-    
     <script src="https://kit.fontawesome.com/7a9e4a4ed4.js" crossorigin="anonymous"></script>
     <script src="../js/script.js"></script>
 
@@ -185,11 +133,11 @@
 
     <script>
         const URL = "http://127.0.0.1:5000";
-
+    
         function agregarProducto() {
             const formulario = document.getElementById("formulario");
             const formData = new FormData(formulario);
-
+    
             fetch(`${URL}/productos`, {
                 method: 'POST',
                 body: formData
@@ -206,27 +154,27 @@
                 console.error('Error:', error);
             });
         }
-
+    
         function cargarProductos() {
             fetch(`${URL}/productos`)
             .then(response => response.json())
             .then(productos => {
                 const productosContainer = document.getElementById("productosContainer");
                 productosContainer.innerHTML = ""; // Limpiamos el contenedor
-
+    
                 productos.forEach(producto => {
                     const productoDiv = document.createElement("div");
                     productoDiv.classList.add("producto");
-
+    
                     // Mostramos información del producto
                     productoDiv.innerHTML = `
                         <h3>${producto.nombre}</h3>
                         <p>Descripción: ${producto.descripcion}</p>
                         <p>Precio: ${producto.precio}</p>
                         <p>Stock: ${producto.stock}</p>
-                        <img src="${URL}/imagen_inventario/${producto.imagen}" alt="${producto.nombre}">
+                        <img src="${URL} /imagen_inventario/${producto.imagen}" alt="${producto.nombre}">
                     `;
-
+    
                     productosContainer.appendChild(productoDiv);
                 });
             })
@@ -234,59 +182,62 @@
                 console.error('Error:', error);
             });
         }
-
+    
+        // Redirige a la página listarProd.html
+        function redirigirAListarProd() {
+            window.location.href = './listarProd.html';
+        }
+    
         // Cargar productos al cargar la página
         window.onload = cargarProductos;
     </script>
 
-    <footer class="footer">
-        <div class="logo">
-            <!-- <picture class=""> -->
-                <img alt="full logo" src="./img/isologo.png">
-            <!-- </picture> -->
-        </div>
+<footer class="footer">
+    <div class="logo">
+        <!-- <picture class=""> -->
+            <img alt="full logo" src="../img/isologo.png">
+        <!-- </picture> -->
+    </div>
 
-        <div class="left">
-            <ul class="list-pages">
-                <li class="item"><a href="#" class="link">Empresa</a></li>
-                <li class="item"><a href="../pages/contact.html" class="link">Contacto</a></li>
-                <li class="item"><a href="#" class="link">Blog</a></li>
-                <li class="item"><a href="../pages/terminosyCondiciones.html" class="link">Términos y Condiciones</a></li>
-                <li class="item"><a href="../pages/botonDeArrepentimiento.html" class="link">Botón de Arrepentimiento</a></li>
-            </ul>
-        </div>
-        
-        <div class="right">
-            <!-- <h5 class="title">Suscríbete a nuestro Newsletter</h5>
-            <form action="" class="data">
-                <input type="email" placeholder="nombre@mail.com" class="email">
-                <input type="submit" value="Enviar" class="submit">
-            </form> -->
-            <h5 class="rrss">Nuestras Redes Sociales</h5>
-            <ul class="list-rrss">
-                <li><i class="fa-brands fa-facebook-f"></i></li>
-                <li><i class="fa-brands fa-x-twitter"></i></li>
-                <li><i class="fa-brands fa-instagram"></i></li>
-            </ul>
-        </div>
-
-
-
-
-        <div class="foot">
-            <p class="copy-bigfoot">Todos los derechos reservados ©2023 | Hecho con <span class="heart">♥️ </span>by  <a href="#">Paw PetShop</a>.</p>
-        </div>
-
-        <div class="dog-snout" style="width: 10%; height: 10%;">
-            <img src="./img/dog-snout.png">
-        </div>
-    </footer>
+    <div class="left">
+        <ul class="list-pages">
+            <li class="item"><a href="#" class="link">Empresa</a></li>
+            <li class="item"><a href="../pages/contact.html" class="link">Contacto</a></li>
+            <li class="item"><a href="#" class="link">Blog</a></li>
+            <li class="item"><a href="../pages/terminosyCondiciones.html" class="link">Términos y Condiciones</a></li>
+            <li class="item"><a href="../pages/botonDeArrepentimiento.html" class="link">Botón de Arrepentimiento</a></li>
+        </ul>
+    </div>
+    
+    <div class="right">
+        <h5 class="title">Suscríbete a nuestro Newsletter</h5>
+        <form action="" class="data">
+            <input type="email" placeholder="nombre@mail.com" class="email">
+            <input type="submit" value="Enviar" class="submit">
+        </form>
+        <h5 class="rrss">Nuestras Redes Sociales</h5>
+        <ul class="list-rrss">
+            <li><i class="fa-brands fa-facebook-f"></i></li>
+            <li><i class="fa-brands fa-x-twitter"></i></li>
+            <li><i class="fa-brands fa-instagram"></i></li>
+        </ul>
+    </div>
 
 
 
-    <script src="https://kit.fontawesome.com/7a9e4a4ed4.js" crossorigin="anonymous"></script>
-    <script src="./js/script.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
+    <div class="foot">
+        <p class="copy-bigfoot">Todos los derechos reservados ©2023 | Hecho con <span class="heart">♥️ </span>by  <a href="#">Paw PetShop</a>.</p>
+    </div>
+
+    <div class="dog-snout" style="width: 10%; height: 10%;">
+        <img src="../img/dog-snout.png">
+    </div>
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/7a9e4a4ed4.js" crossorigin="anonymous"></script>
+<script src="./js/script.js"></script>
 </body>
 </html>

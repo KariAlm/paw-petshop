@@ -1612,3 +1612,27 @@ tbody button:hover{
     border-radius: 5px;
     display: block;
 }
+/* Agrega este código al final de tu archivo CSS */
+
+/* Agrega este código al final de tu archivo CSS */
+
+#productosContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.producto {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px;
+    width: calc(25% - 20px); /* El 25% representa el ancho de 4 productos por fila */
+    box-sizing: border-box; /* Incluye el padding y el borde en el ancho total */
+}
+
+.producto img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+}
+

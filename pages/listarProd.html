@@ -11,6 +11,18 @@
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/mediaQueries.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .confirmation-modal {
+          display: none;
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background-color: white;
+          padding: 20px;
+          z-index: 1000;
+        }
+      </style>
     <title>Paw | Productos en Stock</title>
 </head>
 <body>
@@ -78,7 +90,6 @@
                 <i class="fa-solid fa-cart-shopping"></i>
             </div>
         </nav>
-
         <main>
             <h1 id="tituloProd">Paw Pet Shop Panel Administrador</h1>
     <main>
@@ -116,8 +127,14 @@
                         </table>
                     </div>
                 </div>
+                    <div class="confirmation-modal" v-show="showConfirmationModal">
+                        <p>{{ confirmationMessage }}</p>
+                        <button @click="confirmDelete">Eliminar</button>
+                        <button @click="cancelDelete">Cancelar</button>
+                    </div>
             </div>
-            <!-- Agrega otros elementos HTML según sea necesario -->
+      
+          
     
             <div class="dropdown">
                 <div class="dropdown">
@@ -137,60 +154,73 @@
         <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
         <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script>
-    new Vue({
-        el: '#app',
-        data: {
-            productos: []
-        },
-        mounted() {
-            // Realiza una solicitud al backend para obtener la lista de productos
-            $.ajax({
-                url: 'http://127.0.0.1:5000/productos',
-                type: 'GET',
-                success: (data) => {
+        <script>
+            new Vue({
+              el: '#app',
+              data: {
+                productos: [],
+                showConfirmationModal: false,
+                confirmationMessage: '',
+                codigoToDelete: null
+              },
+              mounted() {
+                // Realiza una solicitud al backend para obtener la lista de productos
+                $.ajax({
+                  url: 'http://127.0.0.1:5000/productos',
+                  type: 'GET',
+                  success: (data) => {
                     // Actualiza la lista de productos en el front-end
                     this.productos = data;
-                },
-                error: (error) => {
+                  },
+                  error: (error) => {
                     console.error('Error al obtener productos:', error);
-                }
-            });
-        },
-        methods: {
-            confirmarEliminar(codigo) {
-                // Muestra una ventana de confirmación antes de eliminar el producto
-                if (window.confirm('¿Estás seguro de que quieres eliminar este producto?')) {
-                    this.eliminarProducto(codigo);
-                }
-            },
-            eliminarProducto(codigo) {
-                // Realiza una solicitud DELETE a la ruta correspondiente en Flask
-                axios.delete(`http://127.0.0.1:5000/productos/${codigo}`)
+                  }
+                });
+              },
+              methods: {
+                confirmarEliminar(codigo) {
+                  // Guarda el código del producto a eliminar y muestra la ventana emergente
+                  this.codigoToDelete = codigo;
+                  axios.post(`http://127.0.0.1:5000/productos/confirmar_eliminar/${codigo}`)
                     .then(response => {
-                        // Maneja la respuesta aquí (puede redirigir o mostrar un mensaje, por ejemplo)
-                        console.log(response.data);
-                        // Actualiza la lista de productos después de eliminar
-                        this.productos = this.productos.filter(producto => producto.codigo !== codigo);
+                      this.confirmationMessage = response.data.mensaje;
+                      this.showConfirmationModal = true;
                     })
                     .catch(error => {
-                        // Maneja el error aquí
-                        console.error(error);
+                      // Manejar errores de solicitud de confirmación
+                      console.error(error);
                     });
-            },
-            modificarProducto(codigo) {
-                // Puedes redirigir después de hacer clic en el botón Modificar
-                window.location.href = './modificarProd.html?codigo=' + codigo;
-            }
-        }
-    });
-</script>
-
-<!-- ... (código HTML existente) ... -->
-
-        
-        
-
+                },
+                cancelDelete() {
+                  // Cancela la eliminación y oculta la ventana emergente
+                  this.showConfirmationModal = false;
+                },
+                confirmDelete() {
+                  // Confirma la eliminación y oculta la ventana emergente
+                  this.eliminarProducto(this.codigoToDelete);
+                  this.showConfirmationModal = false;
+                },
+                eliminarProducto(codigo) {
+                  // Realizar la solicitud DELETE al backend
+                  axios.delete(`http://127.0.0.1:5000/productos/${codigo}`)
+                    .then(response => {
+                      // Maneja la respuesta aquí (puede redirigir o mostrar un mensaje, por ejemplo)
+                      console.log(response.data);
+                      // Actualiza la lista de productos después de eliminar
+                      this.productos = this.productos.filter(producto => producto.codigo !== codigo);
+                    })
+                    .catch(error => {
+                      // Maneja el error aquí
+                      console.error(error);
+                    });
+                },
+                modificarProducto(codigo) {
+                  // Puedes redirigir después de hacer clic en el botón Modificar
+                  window.location.href = './modificarProd.html?codigo=' + codigo;
+                }
+              }
+            });
+          </script>
 <!------------------->
     </header>
     
