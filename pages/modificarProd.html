@@ -106,7 +106,7 @@
                 <input type="number" step="0.01" id="precioModificar" v-model="precio" required><br>
 
                 <!-- Imagen actual del producto -->
-                <img v-if="imagen && !imagenSeleccionada" :src="'./imagen_inventario' + imagen"
+                <img v-if="imagen && !imagenSeleccionada" :src="'/static/imagen_inventario' + imagen"
                     alt="Imagen del producto" style="max-width: 200px;">
 
                 <!-- Vista previa de la nueva imagen seleccionada -->
@@ -135,45 +135,89 @@
         <li><a class="dropdown-item" href="./agregar_productos.html">Agregar Producto</a></li>
         </ul>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-    <script>
-        new Vue({
-            el: '#app',
-            data: {
-                codigo: '',
-                nombre: '',
-                descripcion: '',
-                stock: 0,
-                tamanio: '',
-                precio: 0,
-                imagen: '',  // Puedes añadir más propiedades según tus necesidades
-                imagenSeleccionada: null,
-                imagenUrlTemp: '',
-                proveedor: '',
-                mostrarDatosProducto: false
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            codigo: '',
+            nombre: '',
+            descripcion: '',
+            stock: 0,
+            tamanio: '',
+            precio: 0,
+            imagen: '',  // Puedes añadir más propiedades según tus necesidades
+            imagenSeleccionada: null,
+            imagenUrlTemp: '',
+            proveedor: '',
+            mostrarDatosProducto: false
+        },
+        methods: {
+            obtenerProducto() {
+                // Lógica para enviar la solicitud al servidor Flask para obtener los datos del producto
+                // Utiliza la solicitud fetch o axios para realizar una solicitud GET a la ruta correspondiente en tu servidor
+                // Recibe los datos del producto y asigna las propiedades del objeto de datos
+                // Ejemplo: this.nombre = respuestaServidor.nombre;
+                // Después, establece mostrarDatosProducto en true para mostrar el formulario de modificación
+                // Aquí, estoy usando la ruta /productos/{codigo} como ejemplo, asegúrate de ajustarla según tu backend
+                fetch(`http://127.0.0.1:5000/productos/${this.codigo}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Asigna los datos recibidos a las propiedades del objeto de datos
+                        this.nombre = data.nombre;
+                        this.descripcion = data.descripcion;
+                        this.stock = data.stock;
+                        this.tamanio = data.tamanio;
+                        this.precio = data.precio;
+                        this.imagen = data.imagen; // Asigna la imagen existente
+                        this.proveedor = data.proveedor;
+
+                        // Muestra el formulario de modificación
+                        this.mostrarDatosProducto = true;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
             },
-            methods: {
-                obtenerProducto() {
-                    // Lógica para enviar la solicitud al servidor Flask para obtener los datos del producto
-                    // Puedes usar fetch() o axios para realizar una solicitud POST a la ruta correspondiente en tu servidor
-                    // Recibir los datos del producto y asignarlos a las propiedades del objeto de datos
-                    // Ejemplo: this.nombre = respuestaServidor.nombre;
-                    // Después, establecer mostrarDatosProducto en true para mostrar el formulario de modificación
-                    this.mostrarDatosProducto = true;
-                },
-                guardarCambios() {
-                    // Lógica para enviar la solicitud al servidor Flask para guardar los cambios en el producto
-                    // Puedes usar fetch() o axios para realizar una solicitud POST a la ruta correspondiente en tu servidor
-                    // Recibir una confirmación del servidor y manejar según sea necesario
-                },
-                seleccionarImagen(event) {
-                    // Lógica para manejar la selección de una nueva imagen
-                    // Puedes mostrar una vista previa de la imagen seleccionada
-                    // y asignarla a la propiedad imagenSeleccionada
-                }
+            guardarCambios() {
+                // Lógica para enviar la solicitud al servidor Flask para guardar los cambios en el producto
+                // Utiliza la solicitud fetch o axios para realizar una solicitud PUT a la ruta correspondiente en tu servidor
+                const formData = new FormData();
+                formData.append('nombre', this.nombre);
+                formData.append('descripcion', this.descripcion);
+                formData.append('stock', this.stock);
+                formData.append('tamanio', this.tamanio);
+                formData.append('precio', this.precio);
+                formData.append('imagen', this.imagenSeleccionada); // Puedes necesitar ajustar esto según tu backend
+                formData.append('proveedor', this.proveedor);
+
+                fetch(`http://127.0.0.1:5000/productos/${this.codigo}`, {
+                    method: 'PUT',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.mensaje);
+                        // Puedes manejar la respuesta según sea necesario
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            },
+            seleccionarImagen(event) {
+                // Lógica para manejar la selección de una nueva imagen
+                this.imagenSeleccionada = event.target.files[0];
+
+                // Puedes mostrar una vista previa de la imagen seleccionada
+                const reader = new FileReader();
+                reader.onload = () => {
+                    this.imagenUrlTemp = reader.result;
+                };
+                reader.readAsDataURL(this.imagenSeleccionada);
             }
-        });
-    </script>
+        }
+    });
+</script>
 
     </main>
     <footer class="footer">

@@ -65,62 +65,45 @@ class Catalogo:
         self.conn.commit()
         print("Producto agregado correctamente.")
         return True      
-
-
-        # #crear diccionario si no existe algun prod con ese codigo
-        # producto = {
-        #     'codigo': codigo, #int
-        #     'nombre': nomb, #str
-        #     'descripcion': desc, #str
-        #     'precio': precio, #float
-        #     'tamanio': tam, #str
-        #     'stock': stock, #int
-        #     'imagen': img, #str
-        #     'marca': marca #str
-        # }
-        # #se almacena el prod en el arreglo
-        # self.productos.append(producto)
-        # return True #devuelve true si se agregó
-
-    #consultar prod por codigo
+#-------Cosultar prod-------------------------------------------------------------------------------------
     def consultar_producto(self, codigo):
         self.cursor.execute(f"SELECT * FROM productos WHERE codigo = {codigo}")
         return self.cursor.fetchone()
 
     #modificar prod por codigo
 
-    def modificar_producto(self, codigo, nuevo_nombre, nueva_descripcion, nuevo_precio, nuevo_tamanio, nuevo_stock, nueva_imagen, nuevo_proveedor):
-        # for producto in self.productos:
-        #     if producto['codigo'] == codigo:
-        #         producto['nombre'] = nuevo_nombre
-        #         producto['descripcion'] = nueva_descripcion
-        #         producto['precio'] = nuevo_precio
-        #         producto['tamanio'] = nuevo_tamanio
-        #         producto['stock'] = nuevo_stock
-        #         producto['imagen'] = nueva_imagen
-        #         producto['proveedor'] = nuevo_proveedor
-        #         return True
-        # return False
+    def modificar_producto(self, codigo, nombre, descripcion, precio, nuevo_tamanio, stock, imagen, proveedor):
+        producto = self.consultar_producto(codigo)
+
+        if not producto:
+            return False
+
+    # Ruta a la imagen anterior
+        ruta_imagen_anterior = os.path.join(RUTA_DESTINO, producto['imagen'])
+
+    # Actualiza la información del producto
         sql = f"UPDATE productos SET \
-            nombre = '{nuevo_nombre}', \
-            descripcion = '{nueva_descripcion}', \
-            precio = '{nuevo_precio}', \
+            nombre = '{nombre}', \
+            descripcion = '{descripcion}', \
+            precio = '{precio}', \
             tamanio = '{nuevo_tamanio}', \
-            stock = '{nuevo_stock}', \
-            imagen= '{nueva_imagen}', \
-            proveedor ='{nuevo_proveedor}' \
+            stock = '{stock}', \
+            imagen = '{imagen}', \
+            proveedor = '{proveedor}' \
             WHERE codigo = {codigo}"
+
         self.cursor.execute(sql)
         self.conn.commit()
+
+        # Elimina la imagen anterior solo si se actualizó la imagen
+        if imagen != producto['imagen'] and os.path.exists(ruta_imagen_anterior):
+            os.remove(ruta_imagen_anterior)
+
         return self.cursor.rowcount > 0
 #--------------------------------------------------------------------------------------------
     #eliminar prod por codigo
     def eliminar_producto(self, codigo):
-        # for producto in self.productos:
-        #     if producto['codigo'] == codigo:
-        #         self.productos.remove(producto)
-        #         return True
-        # return False
+       
         self.cursor.execute(f"DELETE FROM productos WHERE codigo = {codigo}")
         self.conn.commit()
         return self.cursor.rowcount > 0
@@ -139,7 +122,7 @@ class Catalogo:
                 "precio": producto['precio'],
                 "tamanio": producto['tamanio'],
                 "stock": producto['stock'],
-                "imagen": producto['imagen'],
+                "imagen": f"/static/imagen_inventario/{producto['imagen']}",
                 "proveedor": producto['proveedor']
             }
             lista_productos.append(producto_info)
@@ -160,18 +143,32 @@ class Catalogo:
             print(f"Imagen: {producto['imagen']}")
             print(f"Proveedor: {producto['proveedor']}")
             print("-" * 20)
+            producto_info = {
+                "codigo": producto['codigo'],
+                "nombre": producto['nombre'],
+                "descripcion": producto['descripcion'],
+                "precio": producto['precio'],
+                "tamanio": producto['tamanio'],
+                "stock": producto['stock'],
+                "imagen": f"/static/imagen_inventario/{producto['imagen']}",  
+                "proveedor": producto['proveedor']
+            }
+            return jsonify(producto_info), 201
         else:
             print("Producto no encontrado.")
+            return jsonify({"mensaje": "Producto no encontrado"}), 404
+
+            
 
 
 catalogo = Catalogo(host='localhost', user='root', password='', database='paw_petproductos')
 # catalogo.agregar_producto(1, 'Pienso para perros', 'Pienso para perros adultos', 21000.99, '1kg', 10, 'eso.png', 'purina')
 # catalogo.agregar_producto(2, 'Pienso para gatos', 'Pienso para gatos', 13000.00, '1kg', 10, 'comida.png', 'purina')
 # catalogo.agregar_producto(5, 'Jueguete para gatos', 'jueguete', 16000.00, 'Pequeño', 10, 'jueguete.png', 'petgasper')
-#catalogo.listar_productos()
+# catalogo.listar_productos()
 
 #Carpeta para guardar las imagenes.
-RUTA_DESTINO = '../pages/imagen_inventario' 
+RUTA_DESTINO = '/static/imagen_inventario/' 
 #--------------------------------------------------------------------
 @app.route("/productos", methods=["POST"])
 def agregar_producto():
@@ -203,9 +200,7 @@ def agregar_producto():
 @app.route("/productos", methods=["GET"])
 def listar_productos():
     productos = catalogo.listar_productos()
-    return jsonify(productos)
-
-
+    return jsonify(productos), 200
 #--------------------------------------------------------------------
 @app.route("/productos/<int:codigo>", methods=["GET"])
 def mostrar_producto(codigo):
@@ -214,26 +209,27 @@ def mostrar_producto(codigo):
         return jsonify(producto), 201
     else:
         return "Producto no encontrado", 404
-
+    
 
 
 #--------------------------------------------------------------------
 @app.route("/productos/<int:codigo>", methods=["PUT"])
 def modificar_producto(codigo):
     #Recojo los datos del form
-    nuevo_nombre= request.form.get("nombre")
-    nueva_descripcion = request.form.get("descripcion")
-    nuevo_precio = request.form.get("precio")
-    nuevo_tamanio = request.form['tamanio']
-    nuevo_stock = request.form.get("stock")
+    codigo = request.form['codigo']
+    nombre = request.form['nombre']
+    descripcion = request.form['descripcion']
+    precio = request.form['precio']
+    stock = request.form['stock']
+    tamanio = request.form['tamanio']
     imagen = request.files['imagen']
-    nuevo_proveedor = request.form.get("proveedor")
+    proveedor = request.form['proveedor']
 
     # Procesamiento de la imagen
-    nombre_imagen = secure_filename(imagen.filename)
-    nombre_base, extension = os.path.splitext(nombre_imagen)
-    nombre_imagen = f"{nombre_base}_{int(time.time())}{extension}"
-    imagen.save(os.path.join(RUTA_DESTINO, nombre_imagen))
+    imagen = secure_filename(imagen.filename)
+    nombre_base, extension = os.path.splitext(imagen)
+    imagen = f"{nombre_base}_{int(time.time())}{extension}"
+    imagen.save(os.path.join(RUTA_DESTINO, imagen))
 
     # Busco el producto guardado
     producto = producto = catalogo.consultar_producto(codigo)
@@ -246,7 +242,7 @@ def modificar_producto(codigo):
         if os.path.exists(ruta_imagen):
             os.remove(ruta_imagen)
     
-    if catalogo.modificar_producto(codigo, nuevo_nombre, nueva_descripcion, nuevo_precio, nuevo_tamanio, nuevo_stock, nombre_imagen, nuevo_proveedor):
+    if catalogo.modificar_producto(codigo, nombre, descripcion, precio, tamanio, stock, imagen, proveedor):
         return jsonify({"mensaje": "Producto modificado"}), 200
     else:
         return jsonify({"mensaje": "Producto no encontrado"}), 403
@@ -258,27 +254,21 @@ def eliminar_producto(codigo):
     # Busco el producto guardado
     producto = producto = catalogo.consultar_producto(codigo)
     if producto: # Si existe el producto...
-        imagen_vieja = producto["imagen"]
+        imagen = producto["imagen"]
         # Armo la ruta a la imagen
-        ruta_imagen = os.path.join(RUTA_DESTINO, imagen_vieja)
-
+        ruta_imagen = os.path.join(RUTA_DESTINO, imagen)
         # Y si existe la borro.
         if os.path.exists(ruta_imagen):
             os.remove(ruta_imagen)
-
     # Luego, elimina el producto del catálogo
     if catalogo.eliminar_producto(codigo):
         return jsonify({"mensaje": "Producto eliminado"}), 200
     else:
         return jsonify({"mensaje": "Error al eliminar el producto"}), 500
-    
-@app.route("/productos/confirmar_eliminar/<int:codigo>", methods=["POST"])
+#--------------------------------------------------------------------  
+@app.route("/productos/confirmar_eliminar/<int:codigo>", methods=["GET"])
 def confirmar_eliminar_producto(codigo):
-    # Aquí puedes realizar cualquier lógica de confirmación necesaria
-    # Puedes verificar si el producto puede eliminarse y devolver una respuesta adecuada
-
-    # En este ejemplo, simplemente devolveremos un mensaje de confirmación
-    return jsonify({"mensaje": f"¿Estás seguro de que quieres eliminar el producto {codigo}?"}), 200
+    return render_template("confirmar_eliminar.html", codigo=codigo)
 #--------------------------------------------------------------------
 if __name__ == "__main__":
     app.run(debug=True)

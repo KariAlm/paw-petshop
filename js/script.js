@@ -33,7 +33,7 @@ if (!fs.existsSync(RUTA_DESTINO)) {
     fs.mkdirSync(RUTA_DESTINO);
 }
 
-const RUTA_DESTINO = './imagen_inventario/';
+const RUTA_DESTINO = '/static/imagen_inventario/';
 
 // Ejemplo de código para guardar una imagen usando Node.js y Express
 const express = require('express');
@@ -61,3 +61,5 @@ app.post('/subir-imagen', upload.single('imagen'), (req, res) => {
 app.listen(3000, () => {
     console.log('Servidor web iniciado');
 });
+// JavaScript en tu frontend
+

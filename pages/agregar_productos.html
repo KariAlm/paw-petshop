@@ -54,17 +54,12 @@
             </nav>
         </div>
         <!-- Topbar End -->
-
         <!-- Navbar Start -->
         <nav class="navbar">
             <img src="../img/isologo.png" class="logo" alt="logo petshop paw">
-            <!-- <input type="checkbox" id="menu-check">
-            <label id="menu" for="menu-check">
-                <span id="menu-abrir">&#9776;</span>
-                <span id="menu-cerrar">X</span>
-            </label> -->
+            <!----------------------------------->
             <ul class="menu" id="menu">
-                <!-- <li><a href="#">Home</a></li> -->
+                <!---------------Home -------------->
                 <li><a href="../pages/services.html">Servicios</a>
                     <ul class="submenu" id="submenu">
                         <li><a href="../pages/services.html#alojamiento">Alojamiento para Mascotas</a></li>
@@ -93,9 +88,7 @@
             </div>
         </nav>
         <!-- Navbar End -->
-    <h1 id="tituloProd">Agregar Productos al Inventario</h1>
-    
-    
+    <h1 id="tituloProd">Agregar Productos al Inventario</h1> 
     <!--enctype="multipart/form-data es necesario para enviar archivos al back.-->
     <form id="formulario" enctype="multipart/form-data">
         <label for="codigo">Código:</label>
@@ -133,27 +126,28 @@
     <script>
         const URL = "http://127.0.0.1:5000";
     
-        function agregarProducto() {
-            const formulario = document.getElementById("formulario");
-            const formData = new FormData(formulario);
-    
-            fetch(`${URL}/productos`, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.mensaje);
-                if (data.mensaje === "Producto agregado") {
-                    cargarProductos();
-                    formulario.reset();
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
-    
+            function agregarProducto() {
+        const formulario = document.getElementById("formulario");
+        const formData = new FormData(formulario);
+
+        fetch(`${URL}/productos`, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.mensaje);
+            if (data.mensaje === "Producto agregado") {
+                formulario.reset();
+                // Redirige a la página listarProd.html después de agregar el producto
+                window.location.href = './listarProd.html';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
         function cargarProductos() {
             fetch(`${URL}/productos`)
             .then(response => response.json())
@@ -171,7 +165,7 @@
                         <p>Descripción: ${producto.descripcion}</p>
                         <p>Precio: ${producto.precio}</p>
                         <p>Stock: ${producto.stock}</p>
-                        <img src="${URL} /imagen_inventario/${producto.imagen}" alt="${producto.nombre}">
+                        <img src="${URL} /static/imagen_inventario/${producto.imagen}" alt="${producto.nombre}">
                     `;
     
                     productosContainer.appendChild(productoDiv);
