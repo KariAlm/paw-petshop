@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/mediaQueries.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+    <title>Paw | Inicio</title>
+
+    <style>
+        .login-form,
+        .register-form {
+            padding: 40px 50px;
+            box-sizing: border-box;
+            margin: 20px; /* Espaciadcio con el otro formulario */
+        }
+
+        .login-form h2,
+        .register-form h2 {
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <section class="topbar">
+            <nav class="contact-info">
+                <ul class="grid-container">
+                    <li class="contact-item grid-item">
+                        <div class="contact-content">
+                            <span class="icon-email">
+                                <i class="fa-regular fa-envelope"></i>
+                            </span>
+                            <div class="text-email">
+                                <p>info@pawpetshop.com</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="contact-item grid-item">
+                        <div class="contact-content">
+                            <span class="icon-phone">
+                                <i class="fa-solid fa-phone"></i>
+                            </span>
+                            <div class="text-phone">
+                                <p>+54 1122 3344</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="contact-item grid-item">
+                        <div class="social-media">
+                            <div class="icon-rrss">
+                                <span><i class="fa-brands fa-facebook-f"></i></span>
+                                <span><i class="fa-brands fa-x-twitter"></i></span>
+                                <span><i class="fa-brands fa-instagram"></i></span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </section>
+
+        <nav class="navbar">
+            <img src="../img/isologo.png" class="logo" alt="logo petshop paw">
+            <ul class="menu" id="menu">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="./services.html">Servicios</a></li>
+                <li><a href="./products.html">Productos</a></li>
+            
+                <li><a href="./contact.html">Contacto</a></li> 
+            </ul>
+            <div class="menu-bar" id="menu-bar">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+            <div class="heart">
+                <i class="fa-regular fa-heart"></i>
+            </div>
+            <div class="user">
+                <a href="./inicio.html">
+                    <i class="fa-regular fa-user"></i>
+                </a>
+            </div>
+            <div class="shopping">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <br>
+        <center>
+            <h1>¡Bienvenido!</h1>
+            <div class="form-container">
+                <!-- Iniciar Sesión -->
+                <form id="login-form" class="login-form" action="#" method="post">
+                    <h2>Iniciar Sesión</h2>
+                        <label for="usuario">Usuario (email):</label>
+                        <input class="form-input" type="email" id="usuario" name="usuario" required>
+
+                        <label for="contrasena">Contraseña:</label>
+                        <input class="form-input" type="password" id="contrasena" name="contrasena" required>
+
+                        <button type="submit" class="form-submit" id="login-button">Iniciar Sesión</button>
+
+                </form>
+
+                <!-- Registrarse -->
+                <form id="register-form" class="register-form" action="#" method="post">
+                    <h2>Registrarse</h2>
+                        <label for="nombre-registro">Nombre:</label>
+                        <input class="form-input" type="text" id="nombre-registro" name="nombre-registro" required>
+
+                        <label for="apellido">Apellido:</label>
+                        <input class="form-input" type="text" id="apellido" name="apellido" required>
+
+                        <label for="email-registro">Correo Electrónico:</label>
+                        <input class="form-input" type="email" id="email-registro" name="email-registro" required>
+
+                        <label for="contrasena-registro">Contraseña:</label>
+                        <input class="form-input" type="password" id="contrasena-registro" name="contrasena-registro" required>
+
+                        <button type="submit" class="form-submit" onclick="redirectRegistro()">Registrarse</button>
+
+
+                </form>
+        </div>
+    </center>
+</main>
+<div class="dropdown">
+    <div class="dropdown">
+        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        ADMINISTRADOR
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="./menúCRUD.html">Menú Administrador</a></li>
+        </ul>
+    </div>
+</div>
+</main>
+<br>
+<br>
+<br>
+
+            <script src="https://kit.fontawesome.com/7a9e4a4ed4.js" crossorigin="anonymous"></script>
+            <script src="../js/scripts.js"></script>
+    <script>
+        function redirectRegistro() {
+            // Utiliza window.location.href para redirigir a la página deseada
+            window.location.href = "file:///C:/Users/josea/OneDrive/Documentos/GitHub/paw-petshop/pages/menúCRUD.html";
+        }
+    </script>
+                <script>
+                    $(document).ready(function() {
+                        // Evento para el formulario de inicio de sesión
+                        $("#login-form").submit(function(event) {
+                            event.preventDefault();
+                            var usuario = $("#usuario").val();
+                            var contrasena = $("#contrasena").val();
+                            $.ajax({
+                                url: "http://localhost:5000/usuarios/login",
+                                method: "POST",
+                                contentType: "application/json",
+                                data: JSON.stringify({ usuario: usuario, contrasena: contrasena }),
+                                success: function(response) {
+                                    console.log(response.mensaje);
+                                    window.location.href = "../pages/menúCRUD.html";
+                                },
+                                error: function(error) {
+                                    console.error(error.responseJSON.mensaje);
+                                }
+                            });
+                        });
+
+                        // Evento para el formulario de registro
+                        $("#register-form").submit(function(event) {
+                            event.preventDefault();
+                            var nombreRegistro = $("#nombre-registro").val();
+                            var apellido = $("#apellido").val();
+                            var emailRegistro = $("#email-registro").val();
+                            var contrasenaRegistro = $("#contrasena-registro").val();
+                            $.ajax({
+                                url: "http://localhost:5000/usuarios/register",
+                                method: "POST",
+                                contentType: "application/json",
+                                data: JSON.stringify({
+                                    "nombre-registro": nombreRegistro,
+                                    "apellido": apellido,
+                                    "email-registro": emailRegistro,
+                                    "contrasena-registro": contrasenaRegistro
+                                }),
+                                success: function(response) {
+                                    console.log(response.mensaje);
+                                    // Puedes realizar acciones adicionales después del registro si es necesario
+                                },
+                                error: function(error) {
+                                    console.error(error.responseJSON.mensaje);
+                                    // Puedes mostrar un mensaje de error al usuario si es necesario
+                                }
+                            });
+                        });
+                    });
+                </script>
+    
+    
+    
+    <footer class="footer">
+        <div class="logo">
+            <img alt="full logo" src="../img/isologo.png">
+        </div>
+    
+        <div class="left">
+            <ul class="list-pages">
+                <li class="item"><a href="#" class="link">Empresa</a></li>
+                <li class="item"><a href="../pages/contact.html" class="link">Contacto</a></li>
+            </ul>
+        </div>
+        
+        <div class="right">
+            <h5 class="title">Suscríbete a nuestro Newsletter</h5>
+            <form action="" class="data">
+                <input type="email" placeholder="nombre@mail.com" class="email">
+                <input type="submit" value="Enviar" class="submit">
+            </form>
+            <h5 class="rrss">Nuestras Redes Sociales</h5>
+            <ul class="list-rrss">
+                <li><i class="fa-brands fa-facebook-f"></i></li>
+                <li><i class="fa-brands fa-x-twitter"></i></li>
+                <li><i class="fa-brands fa-instagram"></i></li>
+            </ul>
+        </div>
+    
+        <div class="foot">
+            <p class="copy-bigfoot">Todos los derechos reservados ©2023 | Hecho con <span class="heart">♥️ </span>by <a href="#">Paw PetShop</a>.</p>
+        </div>
+    
+        <div class="dog-snout" style="width: 10%; height: 10%;">
+            <img src="../img/dog-snout.png">
+        </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/7a9e4a4ed4.js" crossorigin="anonymous"></script>
+    <script src="./js/script.js"></script>
+</body>
+</html>

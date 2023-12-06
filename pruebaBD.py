@@ -218,48 +218,38 @@ def mostrar_producto(codigo):
 
 
 #--------------------------------------------------------------------
-@app.route("/productos/<int:codigo>", methods=["GET", "POST"])
+@app.route("/productos/<int:codigo>", methods=["PUT"])
 def modificar_producto(codigo):
-    if request.method == "POST":
-        nuevo_nombre = request.form.get("nombre")
-        nueva_descripcion = request.form.get("descripcion")
-        nuevo_precio = request.form.get("precio")
-        nuevo_tamanio = request.form.get("tamanio")
-        nuevo_stock = request.form.get("stock")
-        nuevo_proveedor = request.form.get("proveedor")
+    #Recojo los datos del form
+    nuevo_nombre= request.form.get("nombre")
+    nueva_descripcion = request.form.get("descripcion")
+    nuevo_precio = request.form.get("precio")
+    nuevo_tamanio = request.form['tamanio']
+    nuevo_stock = request.form.get("stock")
+    imagen = request.files['imagen']
+    nuevo_proveedor = request.form.get("proveedor")
 
-        # Procesar la imagen
-        if 'nuevaImagen' in request.files:
-            imagen = request.files['nuevaImagen']
-            if imagen and allowed_file(imagen.filename):
-                nombre_imagen = secure_filename(imagen.filename)
-                nombre_base, extension = os.path.splitext(nombre_imagen)
-                nombre_imagen = f"{nombre_base}_{int(time.time())}{extension}"
-                ruta_imagen = os.path.join(app.config['UPLOAD_FOLDER'], nombre_imagen)
-                imagen.save(ruta_imagen)
-            else:
-                # Manejar el caso donde el archivo no es válido
-                pass
+    # Procesamiento de la imagen
+    nombre_imagen = secure_filename(imagen.filename)
+    nombre_base, extension = os.path.splitext(nombre_imagen)
+    nombre_imagen = f"{nombre_base}_{int(time.time())}{extension}"
+    imagen.save(os.path.join(RUTA_DESTINO, nombre_imagen))
 
-        # Luego, llamar a tu función modificar_producto con los datos procesados
-        catalogo.modificar_producto(codigo, nuevo_nombre, nueva_descripcion, nuevo_precio, nuevo_tamanio, nuevo_stock, nombre_imagen, nuevo_proveedor)
+    # Busco el producto guardado
+    producto = producto = catalogo.consultar_producto(codigo)
+    if producto: # Si existe el producto...
+        imagen= producto["imagen"]
+        # Armo la ruta a la imagen
+        ruta_imagen = os.path.join(RUTA_DESTINO, imagen)
 
-        # Redirigir a alguna página después de la modificación
-        return redirect(url_for('producto_modificado', codigo=codigo))
-
-    # Lógica para manejar el método GET y mostrar la página con el formulario.
-    return render_template("tuplantilla.html", codigo=codigo)
-
-@app.route("/producto_modificado/<int:codigo>")
-def producto_modificado(codigo):
-    # Puedes renderizar una plantilla especial para indicar que el producto ha sido modificado.
-    # O simplemente redirigir a otra página.
-    return render_template("producto_modificado.html", codigo=codigo)
-
-# Función para verificar si una extensión de archivo es válida
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
+        # Y si existe la borro.
+        if os.path.exists(ruta_imagen):
+            os.remove(ruta_imagen)
+    
+    if catalogo.modificar_producto(codigo, nuevo_nombre, nueva_descripcion, nuevo_precio, nuevo_tamanio, nuevo_stock, nombre_imagen, nuevo_proveedor):
+        return jsonify({"mensaje": "Producto modificado"}), 200
+    else:
+        return jsonify({"mensaje": "Producto no encontrado"}), 403
 
 
 #--------------------------------------------------------------------
